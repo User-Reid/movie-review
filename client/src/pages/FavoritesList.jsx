@@ -2,12 +2,14 @@ import { useQuery, useMutation } from "@apollo/client";
 import { QUERY_ME } from "../utils/queries";
 import { UN_FAVORITE_MOVIE } from "../utils/mutations";
 import Auth from "../utils/auth";
-import Movie from '../components/Movie.jsx';
+import Movie from "../components/Movie.jsx";
 
 const FavoritesList = () => {
   const [unfavoriteMovie] = useMutation(UN_FAVORITE_MOVIE);
   const { loading, data } = useQuery(QUERY_ME);
   const userData = data?.me || {};
+
+  console.log(userData);
 
   const handleUnfavoriteMovie = async (movieId) => {
     const token = Auth.loggedIn() ? Auth.getToken() : null;
@@ -30,8 +32,10 @@ const FavoritesList = () => {
   };
 
   const getRating = (movieId) => {
-    const ratedMovie = userData.ratedMovies.find(movie => movie.movieId === movieId);
-    return ratedMovie ? ratedMovie.rating : 'N/A';
+    const ratedMovie = userData.ratedMovies.find(
+      (movie) => movie.movieId === movieId
+    );
+    return ratedMovie ? ratedMovie.rating : "N/A";
   };
 
   if (loading) {

@@ -5,7 +5,8 @@ import RatedList from "./pages/RatedList";
 import FavoritesList from "./pages/FavoritesList";
 import Error from "./components/Error";
 import Dashboard2 from "./pages/Dashboard2";
-import '../index.css';
+import auth from "./utils/auth";
+import "../index.css";
 // import Dashboard from "./pages/Dashboard";
 
 function App() {
@@ -21,15 +22,15 @@ function App() {
         },
         {
           path: "/",
-          element: <Dashboard2 />,
+          element: auth.loggedIn() ? <Dashboard2 /> : <Login />,
         },
         {
           path: "/rated",
-          element: <RatedList />,
+          element: auth.loggedIn() ? <RatedList /> : <Login />,
         },
         {
           path: "/favorites",
-          element: <FavoritesList />,
+          element: auth.loggedIn() ? <FavoritesList /> : <Login />,
         },
       ],
     },

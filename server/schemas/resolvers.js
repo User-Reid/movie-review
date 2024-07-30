@@ -36,6 +36,14 @@ const resolvers = {
     rateMovie: async (parent, { movieInput }, context) => {
       if (context.user) {
         try {
+          // Ensure that the ratedMovies array does not contain the movie already
+          const user = await User.findById(context.user._id);
+          const isMovieRated = user.ratedMovies.some(movie => movie.movieId === movieInput.movieId);
+    
+          if (isMovieRated) {
+            throw new Error("Movie already rated");
+          }
+    
           const updatedUser = await User.findOneAndUpdate(
             { _id: context.user._id },
             {
@@ -45,16 +53,17 @@ const resolvers = {
             },
             { new: true, runValidators: true }
           );
-
+    
           return updatedUser;
         } catch (err) {
           console.log(err);
           throw new Error("Failed to Rate Movie");
         }
       }
-
-      throw new AuthentificationError("Not authenticated");
+    
+      throw new AuthenticationError("Not authenticated");
     },
+
     unRateMovie: async (parent, { movieId }, context) => {
       if (!context.user) {
         throw new AuthenticationError("User not logged in");
@@ -66,9 +75,18 @@ const resolvers = {
         { new: true }
       );
     },
+    
     addMovieToFavorite: async (parent, { movieInput }, context) => {
       if (context.user) {
         try {
+          // Ensure that the favoriteMovies array does not contain the movie already
+          const user = await User.findById(context.user._id);
+          const isMovieFavorite = user.favoriteMovies.some(movie => movie.movieId === movieInput.movieId);
+    
+          if (isMovieFavorite) {
+            throw new Error("Movie already in favorites");
+          }
+    
           const updatedUser = await User.findOneAndUpdate(
             { _id: context.user._id },
             {
@@ -78,16 +96,17 @@ const resolvers = {
             },
             { new: true, runValidators: true }
           );
-
+    
           return updatedUser;
         } catch (err) {
           console.log(err);
           throw new Error("Failed to add movie to favorites!");
         }
       }
-
-      throw new AuthentificationError("Not authenticated");
+    
+      throw new AuthenticationError("Not authenticated");
     },
+
     unFavoriteMovie: async (parent, { movieId }, context) => {
       if (!context.user) {
         throw new AuthenticationError("User not logged in");

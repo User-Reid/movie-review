@@ -19,11 +19,11 @@ export default function App() {
 
   const [rated, setRated] = useLocalStorageState([], "rated");
 
-  useEffect(() => {
-    if (!Auth.loggedIn()) {
-      window.location.assign("/login"); // Redirect to login page if not logged in
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (!Auth.loggedIn()) {
+  //     window.location.assign("/login"); // Redirect to login page if not logged in
+  //   }
+  // }, []);
 
   function handleSelectMovie(movie) {
     setSelectedId((selectedId) =>

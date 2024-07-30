@@ -10,9 +10,11 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 // import Navbar from "../components/Navbar";
 import { Outlet } from "react-router-dom";
+import Navigation from "../components/Navigation";
 const httpLink = createHttpLink({
   uri: "/graphql",
 });
+import auth from "../utils/auth";
 const authLink = setContext((_, { headers }) => {
   const token = localStorage.getItem("id_token");
   return {
@@ -30,6 +32,7 @@ function AppLayout() {
   return (
     <ApolloProvider client={client}>
       <div className="flex flex-col justify-between h-screen">
+        {auth.loggedIn() ? <Navigation /> : ""}
         <Header />
         {/* <Navbar /> */}
         <Outlet />
