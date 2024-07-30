@@ -19,9 +19,6 @@ const movieSchema = new Schema({
     min: 0, // Minimum value for rating
     max: 5, // Maximum value for rating
   },
-  favorite: {
-    type: Boolean,
-  },
 });
 
 module.exports = movieSchema;

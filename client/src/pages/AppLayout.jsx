@@ -3,22 +3,22 @@ import {
   InMemoryCache,
   ApolloProvider,
   createHttpLink,
-} from '@apollo/client';
-import { setContext } from '@apollo/client/link/context';
+} from "@apollo/client";
+import { setContext } from "@apollo/client/link/context";
 // import { Outlet } from 'react-router-dom';
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import Navbar from "../components/Navbar";
+// import Navbar from "../components/Navbar";
 import { Outlet } from "react-router-dom";
 const httpLink = createHttpLink({
-  uri: '/graphql',
+  uri: "/graphql",
 });
 const authLink = setContext((_, { headers }) => {
-  const token = localStorage.getItem('id_token');
+  const token = localStorage.getItem("id_token");
   return {
     headers: {
       ...headers,
-      authorization: token ? `Bearer ${token}` : '',
+      authorization: token ? `Bearer ${token}` : "",
     },
   };
 });
@@ -28,11 +28,13 @@ const client = new ApolloClient({
 });
 function AppLayout() {
   return (
-    <ApolloProvider className="flex flex-col justify-between h-screen" client={client}>
-      <Header />
-      <Navbar />
-      <Outlet />
-      <Footer />
+    <ApolloProvider client={client}>
+      <div className="flex flex-col justify-between h-screen">
+        <Header />
+        {/* <Navbar /> */}
+        <Outlet />
+        <Footer />
+      </div>
     </ApolloProvider>
   );
 }

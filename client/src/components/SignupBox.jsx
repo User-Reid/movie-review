@@ -1,26 +1,28 @@
-import { Alert } from 'react-bootstrap';
-import { useState } from 'react';
-import { useMutation } from '@apollo/client';
-import { ADD_USER } from '../utils/mutations';
-import Auth from '../utils/auth';
+import { Alert } from "react-bootstrap";
+import { useState } from "react";
+import { useMutation } from "@apollo/client";
+import { ADD_USER } from "../utils/mutations";
+import Auth from "../utils/auth";
 /* eslint-disable no-unused-vars */
 
-
 function SignupBox({ setBox }) {
-
-  const [userFormData, setUserFormData] = useState({ username: '', email: '', password: '' });
+  const [userFormData, setUserFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
   const [addUser, { error, data }] = useMutation(ADD_USER);
   const [showAlert, setShowAlert] = useState(false);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    console.log(name, value)
+    console.log(name, value);
     setUserFormData({ ...userFormData, [name]: value });
   };
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-    console.log("Form submit")
+    console.log("Form submit");
 
     // check if form has everything (as per react-bootstrap docs)
     const form = event.currentTarget;
@@ -30,22 +32,21 @@ function SignupBox({ setBox }) {
     }
 
     try {
-      const {data} = await addUser({
+      const { data } = await addUser({
         variables: { ...userFormData },
       });
-      console.log({data})
+      console.log({ data });
 
       Auth.login(data.addUser.token);
-
     } catch (err) {
       console.error(err);
       setShowAlert(true);
     }
 
     setUserFormData({
-      username: '',
-      email: '',
-      password: '',
+      username: "",
+      email: "",
+      password: "",
     });
   };
 
@@ -57,11 +58,19 @@ function SignupBox({ setBox }) {
             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
               Create an account
             </h1>
-            <form className="space-y-4 md:space-y-6" onSubmit={handleFormSubmit}>
-            <Alert dismissible onClose={() => setShowAlert(false)} show={showAlert} variant='danger'>
-              Something went wrong with your signup!
-            </Alert>
-            <div>
+            <form
+              className="space-y-4 md:space-y-6"
+              onSubmit={handleFormSubmit}
+            >
+              <Alert
+                dismissible
+                onClose={() => setShowAlert(false)}
+                show={showAlert}
+                variant="danger"
+              >
+                Something went wrong with your signup!
+              </Alert>
+              <div>
                 <label
                   htmlFor="username"
                   className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -115,14 +124,17 @@ function SignupBox({ setBox }) {
                   required
                 />
               </div>
-              <div className="flex items-start">
-
-              </div>
+              <div className="flex items-start"></div>
               <button
                 type="submit"
-                disabled={!(userFormData.username && userFormData.email && userFormData.password)}
+                disabled={
+                  !(
+                    userFormData.username &&
+                    userFormData.email &&
+                    userFormData.password
+                  )
+                }
                 className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-
               >
                 Create an account
               </button>

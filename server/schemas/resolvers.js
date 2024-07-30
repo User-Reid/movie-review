@@ -33,37 +33,69 @@ const resolvers = {
 
       return { token, user };
     },
-    addMovie: async (
-      parent,
-      { movieId, title, image, rating, favorite },
-      context
-    ) => {
+    rateMovie: async (parent, { movieInput }, context) => {
+      if (context.user) {
+        try {
+          const updatedUser = await User.findOneAndUpdate(
+            { _id: context.user._id },
+            {
+              $addToSet: {
+                ratedMovies: movieInput,
+              },
+            },
+            { new: true, runValidators: true }
+          );
+
+          return updatedUser;
+        } catch (err) {
+          console.log(err);
+          throw new Error("Failed to Rate Movie");
+        }
+      }
+
+      throw new AuthentificationError("Not authenticated");
+    },
+    unRateMovie: async (parent, { movieId }, context) => {
       if (!context.user) {
         throw new AuthenticationError("User not logged in");
       }
 
-      const newMovie = {
-        movieId,
-        title,
-        image,
-        rating,
-        favorite,
-      };
-
       return User.findOneAndUpdate(
         { _id: context.user._id },
-        { $addToSet: { savedMovies: newMovie } },
-        { new: true, runValidators: true }
+        { $pull: { ratedMovies: { movieId } } },
+        { new: true }
       );
     },
-    removeMovie: async (parent, { movieId }, context) => {
+    addMovieToFavorite: async (parent, { movieInput }, context) => {
+      if (context.user) {
+        try {
+          const updatedUser = await User.findOneAndUpdate(
+            { _id: context.user._id },
+            {
+              $addToSet: {
+                favoriteMovies: movieInput,
+              },
+            },
+            { new: true, runValidators: true }
+          );
+
+          return updatedUser;
+        } catch (err) {
+          console.log(err);
+          throw new Error("Failed to add movie to favorites!");
+        }
+      }
+
+      throw new AuthentificationError("Not authenticated");
+    },
+    unFavoriteMovie: async (parent, { movieId }, context) => {
       if (!context.user) {
         throw new AuthenticationError("User not logged in");
       }
 
       return User.findOneAndUpdate(
         { _id: context.user._id },
-        { $pull: { savedMovies: { movieId } } },
+        { $pull: { favoriteMovies: { movieId } } },
         { new: true }
       );
     },

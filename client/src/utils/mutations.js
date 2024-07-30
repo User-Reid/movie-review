@@ -22,53 +22,102 @@ export const ADD_USER = gql`
   }
 `;
 
-export const ADD_MOVIE = gql`
-  mutation AddMovie(
-    $movieId: String!
-    $title: String!
-    $image: String!
-    $rating: Float!
-    $favorite: Boolean
-  ) {
-    addMovie(
-      movieId: $movieId
-      title: $title
-      image: $image
-      rating: $rating
-      favorite: $favorite
-    ) {
+export const RATE_MOVIE = gql`
+  mutation RateMovie($movieInput: MovieInput) {
+    rateMovie(movieInput: $movieInput) {
       _id
-      email
-      password
-      savedMovieCount
-      savedMovies {
-        favorite
-        image
-        movieId
-        rating
-        title
-      }
-    }
-  }
-`;
-
-export const REMOVE_MOVIE = gql`
-  mutation RemoveMovie($movieId: String!) {
-    removeMovie(movieId: $movieId) {
-      _id
-      email
-      password
-      savedMovieCount
-      savedMovies {
-        favorite
-        image
-        movieId
-        rating
-        title
-      }
       username
+      email
+      password
+      ratedMovieCount
+      ratedMovies {
+        movieId
+        title
+        image
+        rating
+      }
+      favoriteMovieCount
+      favoriteMovies {
+        movieId
+        title
+        image
+        rating
+      }
     }
   }
 `;
 
-//Add save/remove movie mutations here
+export const UN_RATE_MOVIE = gql`
+  mutation UnRateMovie($movieId: String!) {
+    unRateMovie(movieId: $movieId) {
+      _id
+      username
+      email
+      password
+      ratedMovieCount
+      ratedMovies {
+        movieId
+        title
+        image
+        rating
+      }
+      favoriteMovieCount
+      favoriteMovies {
+        movieId
+        title
+        image
+        rating
+      }
+    }
+  }
+`;
+
+export const ADD_MOVIE_TO_FAVORITE = gql`
+  mutation AddMovieToFavorite($movieInput: MovieInput) {
+    addMovieToFavorite(movieInput: $movieInput) {
+      _id
+      username
+      email
+      password
+      ratedMovieCount
+      ratedMovies {
+        movieId
+        title
+        image
+        rating
+      }
+      favoriteMovieCount
+      favoriteMovies {
+        movieId
+        title
+        image
+        rating
+      }
+    }
+  }
+`;
+
+export const UN_FAVORITE_MOVIE = gql`
+  mutation UnFavoriteMovie($movieId: String!) {
+    unFavoriteMovie(movieId: $movieId) {
+      _id
+      username
+      email
+      password
+      ratedMovieCount
+      ratedMovies {
+        movieId
+        title
+        image
+        rating
+      }
+      favoriteMovieCount
+      favoriteMovies {
+        movieId
+        title
+        image
+        rating
+      }
+    }
+  }
+`;

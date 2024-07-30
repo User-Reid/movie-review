@@ -20,7 +20,8 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
-    savedMovies: [movieSchema],
+    ratedMovies: [movieSchema],
+    favoriteMovies: [movieSchema],
   },
   {
     toJSON: {
@@ -44,8 +45,11 @@ userSchema.methods.isCorrectPassword = async function (password) {
   return bcrypt.compare(password, this.password);
 };
 
-userSchema.virtual("savedMovieCount").get(function () {
-  return this.savedMovies.length;
+userSchema.virtual("ratedMovieCount").get(function () {
+  return this.ratedMovies.length;
+});
+userSchema.virtual("favoriteMovieCount").get(function () {
+  return this.favoriteMovies.length;
 });
 
 const User = model("User", userSchema);

@@ -1,7 +1,8 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AppLayout from "./pages/AppLayout";
 import Login from "./pages/Login";
-import Lists from "./pages/Lists";
+import RatedList from "./pages/RatedList";
+import FavoritesList from "./pages/FavoritesList";
 import Error from "./components/Error";
 import Dashboard2 from "./pages/Dashboard2";
 import '../index.css';
@@ -23,8 +24,12 @@ function App() {
           element: <Dashboard2 />,
         },
         {
-          path: "/lists",
-          element: <Lists />,
+          path: "/rated",
+          element: <RatedList />,
+        },
+        {
+          path: "/favorites",
+          element: <FavoritesList />,
         },
       ],
     },

@@ -1,47 +1,47 @@
-import { Alert } from 'react-bootstrap';
-import { useMutation } from '@apollo/client';
-import { LOGIN_USER } from '../utils/mutations';
-import { useState } from 'react';
-import Auth from '../utils/auth';
+import { Alert } from "react-bootstrap";
+import { useMutation } from "@apollo/client";
+import { LOGIN_USER } from "../utils/mutations";
+import { useState } from "react";
+import Auth from "../utils/auth";
 /* eslint-disable no-unused-vars */
 
 function LoginBox({ setBox }) {
-    const [userFormData, setUserFormData] = useState({ email: '', password: '' });
-    const [showAlert, setShowAlert] = useState(false);
-    const [login, { error, data }] = useMutation(LOGIN_USER);
-  
-    const handleInputChange = (event) => {
-      const { name, value } = event.target;
-      setUserFormData({ ...userFormData, [name]: value });
-    };
-  
-    const handleFormSubmit = async (event) => {
+  const [userFormData, setUserFormData] = useState({ email: "", password: "" });
+  const [showAlert, setShowAlert] = useState(false);
+  const [login, { error, data }] = useMutation(LOGIN_USER);
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setUserFormData({ ...userFormData, [name]: value });
+  };
+
+  const handleFormSubmit = async (event) => {
+    event.preventDefault();
+
+    // check if form has everything (as per react-bootstrap docs)
+    const form = event.currentTarget;
+    if (form.checkValidity() === false) {
       event.preventDefault();
-  
-      // check if form has everything (as per react-bootstrap docs)
-      const form = event.currentTarget;
-      if (form.checkValidity() === false) {
-        event.preventDefault();
-        event.stopPropagation();
-      }
-  
-      try {
-        const { data } = await login({
-          variables: { ...userFormData },
-        });
-  
-        Auth.login(data.login.token);
-      } catch (err) {
-        console.error(err);
-        setShowAlert(true);
-      }
-  
-      setUserFormData({
-        username: '',
-        email: '',
-        password: '',
+      event.stopPropagation();
+    }
+
+    try {
+      const { data } = await login({
+        variables: { ...userFormData },
       });
-    };
+
+      Auth.login(data.login.token);
+    } catch (err) {
+      console.error(err);
+      setShowAlert(true);
+    }
+
+    setUserFormData({
+      username: "",
+      email: "",
+      password: "",
+    });
+  };
   return (
     <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
       <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
@@ -50,9 +50,14 @@ function LoginBox({ setBox }) {
             Sign in to your account
           </h1>
           <form className="space-y-4 md:space-y-6" onSubmit={handleFormSubmit}>
-          <Alert dismissible onClose={() => setShowAlert(false)} show={showAlert} variant='danger'>
-          Something went wrong with your login credentials!
-        </Alert>
+            <Alert
+              dismissible
+              onClose={() => setShowAlert(false)}
+              show={showAlert}
+              variant="danger"
+            >
+              Something went wrong with your login credentials!
+            </Alert>
             <div>
               <label
                 htmlFor="email"

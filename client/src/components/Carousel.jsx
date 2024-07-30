@@ -21,7 +21,7 @@ const MovieCarousel = () => {
 
   return (
     <Slider {...settings}>
-      {userData.savedMovies.map((movie) => (
+      {userData.ratedMovies.map((movie) => (
         <Movie movie={movie} />
       ))}
     </Slider>
