@@ -4,8 +4,11 @@ import StarRating from "../components/StarRating";
 import { useMovies } from "../hooks/useMovies";
 import { useLocalStorageState } from "../hooks/useLocalStorageState";
 import { useKey } from "../hooks/useKey";
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { RATE_MOVIE } from "../utils/mutations";
+import Heart from "../components/Heart";
+import { QUERY_ME } from "../utils/queries";
+
 import Auth from "../utils/auth";
 
 const KEY = "e91d2696";
@@ -16,7 +19,8 @@ export default function App() {
   const { movies, isLoading, error } = useMovies(query);
   const [selected, setSelected] = useState(false);
   const [rateMovie, { error2, data }] = useMutation(RATE_MOVIE);
-
+  const me = useQuery(QUERY_ME);
+  const userData = me.data?.me || {};
   const [rated, setRated] = useLocalStorageState([], "rated");
 
   // useEffect(() => {
@@ -100,6 +104,7 @@ export default function App() {
                 onAddRated={handleAddRated}
                 rated={rated}
                 movies={movies}
+                userData={userData}
               />
             ) : (
               <>
@@ -242,6 +247,7 @@ function MovieDetails({
   onAddRated,
   rated,
   setDisplay,
+  userData,
 }) {
   const [movie, setMovie] = useState({});
   const [isLoading, setIsLoading] = useState(false);
@@ -332,52 +338,43 @@ function MovieDetails({
         <Loader />
       ) : (
         <>
-          <div className="flex">
-            <img
-              className="w-1/2"
-              src={poster}
-              alt={`Poster of ${movie} movie`}
-            />
-            <div className="details-overview">
-              <h2>{title}</h2>
-              <p>
-                {released} &bull; {runtime}
-              </p>
-              <p>{genre}</p>
-              <p>
-                <span>⭐</span> {imdbRating} IMDB rating
-              </p>
-
-              <div>
-                <div className="rating">
+      <div className="relative flex flex-col justify-center">
+      <h1 className="flex justify-center text-2xl">{title}</h1>
+        <img
+          src={poster}
+          alt={`Poster of ${movie} movie`}
+          className="movie-img-top rounded-lg w-full h-auto shadow-xl"
+        />
+        <div>
                   {!isRated ? (
                     <>
                       <StarRating
                         maxRating={5}
-                        size={24}
+                        size={48}
                         onSetRating={setUserRating}
                         onAddRated={onAddRated}
                         movie={movie}
                       />
-                      <button onClick={() => onAddRated(movie, userRating)}>
-                        Submit
+                      <div className="mt-1 mb-1 flex space-x-2 justify-center">
+                      <button onClick={() => onAddRated(movie, userRating)} type="button"
+                  className="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
+                        Rate
                       </button>
+                      
+                      <Heart
+                        movie={movie}
+                        userData={userData}
+                        userRating={userRating}
+                      />
+
                     </>
                   ) : (
                     <p>You rated this movie {ratedUserRating}/5⭐</p>
                   )}
-                </div>
-              </div>
-            </div>
+        </div>
           </div>
-
           {/* <p>{averageRating}</p> */}
 
-          <section>
-            <p>
-              <em>{plot}</em>
-            </p>
-          </section>
         </>
       )}
     </div>

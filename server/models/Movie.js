@@ -16,6 +16,7 @@ const movieSchema = new Schema({
   rating: {
     type: Number,
     required: true,
+    default: 0,
     min: 0, // Minimum value for rating
     max: 5, // Maximum value for rating
   },

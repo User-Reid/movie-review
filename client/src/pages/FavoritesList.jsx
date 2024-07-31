@@ -39,7 +39,7 @@ const FavoritesList = () => {
   };
 
   if (loading) {
-    return <h2>LOADING...</h2>;
+    return <h1 className="flex justify-center text-4xl">LOADING...</h1>;
   }
 
   return (

@@ -109,7 +109,7 @@ const Movie = ({ src, alt, rating }) => {
       <img
         src={src}
         alt={alt}
-        className="movie-img-top rounded-lg w-full h-auto"
+        className="movie-img-top rounded-lg w-full h-auto shadow-xl"
       />
       {renderRatingContent()}
     </div>

@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 const containerStyle = {
   display: "flex",
   alignItems: "center",
-  gap: "16px",
+  gap: "8px",
 };
 const starContainerStyle = {
   display: "flex",
@@ -24,7 +24,6 @@ export default function StarRating({
   color = "#FCC419",
   size = 48,
   className = "",
-  messages = [],
   defaultRating = 0,
   onSetRating,
   onAddRated,
@@ -37,12 +36,6 @@ export default function StarRating({
     setRating(rating);
     onSetRating(rating);
   }
-  const textStyle = {
-    lineHeight: "1",
-    margin: "3px",
-    color,
-    fontSize: `${size / 1.5}px`,
-  };
 
   function handleStarReset() {
     setHoverRating("");
@@ -50,7 +43,7 @@ export default function StarRating({
   }
 
   return (
-    <div style={containerStyle} className={`mt-5 flex flex-col ${className}`}>
+    <div style={containerStyle} className={`mt-1 mb-1 flex flex-col ${className}`}>
       <div style={starContainerStyle}>
         {Array.from({ length: maxRating }, (_, i) => (
           <Star
@@ -67,13 +60,8 @@ export default function StarRating({
           />
         ))}
 
-        <p style={textStyle}>
-          {messages.length === maxRating
-            ? messages[hoverRating ? hoverRating - 1 : rating - 1]
-            : hoverRating || rating || ""}
-        </p>
       </div>
-      <button onClick={handleStarReset}>Clear Rating</button>
+      <button onClick={handleStarReset} className="mb-4">Clear Rating</button>
     </div>
   );
 }

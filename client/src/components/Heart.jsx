@@ -3,14 +3,14 @@ import { useMutation } from "@apollo/client";
 import { ADD_MOVIE_TO_FAVORITE, UN_FAVORITE_MOVIE } from "../utils/mutations";
 import Auth from "../utils/auth";
 
-const Heart = ({ movie }) => {
+const Heart = ({ movie, userData, userRating }) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const [favoriteMovie] = useMutation(ADD_MOVIE_TO_FAVORITE);
   const [unfavoriteMovie] = useMutation(UN_FAVORITE_MOVIE);
 
   useEffect(() => {
     // Check if the movie is already in the user's favorite movies
-    const userData = Auth.getUserData();
+
     if (userData) {
       const favoriteMovie = userData.favoriteMovies.some(
         (favMovie) => favMovie.movieId === movie.imdbID
@@ -20,6 +20,7 @@ const Heart = ({ movie }) => {
   }, [movie]);
 
   const handleToggleFavorite = async () => {
+
     const token = Auth.loggedIn() ? Auth.getToken() : null;
     if (!token) {
       console.error("No token found");
@@ -39,7 +40,9 @@ const Heart = ({ movie }) => {
               movieId: movie.imdbID,
               title: movie.Title,
               image: movie.Poster,
-              rating: movie.imdbRating,
+
+              rating: userRating,
+
             },
           },
         });
