@@ -59,7 +59,7 @@ const FavoritesList = () => {
                   <button
                     onClick={() => handleUnfavoriteMovie(movie.movieId)}
                     type="button"
-                    className="focus:outline-none text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:focus:ring-yellow-900"
+                    className="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:focus:ring-red-900"
                   >
                     Unfavorite
                   </button>

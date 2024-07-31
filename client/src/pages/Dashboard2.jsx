@@ -80,15 +80,14 @@ export default function App() {
   );
 
   return (
-    <div className="h-full">
+    <div className="h-full w-screen">
       <NavBar>
         <Search query={query} setQuery={setQuery} setSelected={setSelected} />
         <NumResults movies={movies} />
       </NavBar>
-      <Main className="flex">
+      <Main selected={selected}>
         {!selected ? (
           <Box className="flex">
-            {/* {isLoading ? <Loader /> : <MovieList movies={movies} />} */}
             {isLoading && <Loader />}
             {!isLoading && !error && (
               <MovieList movies={movies} onSelectMovie={handleSelectMovie} />
@@ -96,7 +95,7 @@ export default function App() {
             {error && <ErrorMessage message={error} />}
           </Box>
         ) : (
-          <Box className="w-1/2">
+          <Box>
             {selectedId ? (
               <MovieDetails
                 selectedId={selectedId}
@@ -107,12 +106,7 @@ export default function App() {
                 userData={userData}
               />
             ) : (
-              <>
-                <RatedMovieList
-                  rated={rated}
-                  onDeleteRated={handleDeleteRated}
-                />
-              </>
+              <RatedMovieList rated={rated} onDeleteRated={handleDeleteRated} />
             )}
           </Box>
         )}
@@ -183,8 +177,12 @@ function NumResults({ movies }) {
   );
 }
 
-function Main({ children }) {
-  return <main className="flex h-full main">{children}</main>;
+function Main({ children, selected }) {
+  const mainClass = selected
+    ? "flex h-full main w-screen justify-center"
+    : "flex h-full main w-screen justify-around";
+
+  return <main className={mainClass}>{children}</main>;
 }
 
 function Box({ children, setDisplay, display }) {
@@ -227,17 +225,22 @@ function MovieList({ movies, onSelectMovie }) {
 
 function Movie({ movie, onSelectMovie }) {
   return (
-    <li className="flex" onClick={() => onSelectMovie(movie)}>
-      <img
-        className="h-12 w-7"
-        src={movie.Poster}
-        alt={`${movie.Title} poster`}
-      />
-      <h3>{movie.Title}</h3>
-      <div>
-        <p>({movie.Year})</p>
-      </div>
-    </li>
+    <ul className="w-full">
+      <li
+        className="flex items-center w-full cursor-pointer p-1 border-b hover:bg-gray-200"
+        onClick={() => onSelectMovie(movie)}
+      >
+        <img
+          className="h-12 w-7 mr-2"
+          src={movie.Poster}
+          alt={`${movie.Title} poster`}
+        />
+        <div className="flex flex-col">
+          <h3 className="text-lg font-semibold">{movie.Title}</h3>
+          <p className="text-sm text-gray-500">({movie.Year})</p>
+        </div>
+      </li>
+    </ul>
   );
 }
 
@@ -246,7 +249,6 @@ function MovieDetails({
   onCloseMovie,
   onAddRated,
   rated,
-  setDisplay,
   userData,
 }) {
   const [movie, setMovie] = useState({});
@@ -255,96 +257,54 @@ function MovieDetails({
 
   const countRef = useRef(0);
 
-  useEffect(
-    function () {
-      if (userRating) countRef.current++;
-    },
-    [userRating]
-  );
+  useEffect(() => {
+    if (userRating) countRef.current++;
+  }, [userRating]);
 
   const isRated = rated.map((movie) => movie.imdbID).includes(selectedId);
   const ratedUserRating = rated.find(
     (movie) => movie.imdbID === selectedId
   )?.userRating;
 
-  const {
-    Title: title,
-    Year: year,
-    Poster: poster,
-    Runtime: runtime,
-    imdbRating,
-    Plot: plot,
-    Released: released,
-    Genre: genre,
-  } = movie;
-
-  const isTop = imdbRating > 8;
-  console.log(isTop);
-
-  // const [averageRating, setAverageRating] = useState(0);
-
-  // function handleAdd() {
-  //   const newRatedMovie = {
-  //     imdbID: selectedId,
-  //     title,
-  //     poster,
-  //     year,
-  //     imdbRating: Number(imdbRating),
-  //     runtime: Number(runtime.split(" ")[0]),
-  //     userRating,
-  //     countRatingDecisions: countRef.current,
-  //   };
-
-  //   // onAddRated(newRatedMovie);
-  //   // onCloseMovie();
-
-  //   // setAverageRating(Number(imdbRating));
-  //   // setAverageRating((x) => (x + userRating) / 2);
-  // }
+  const { Title: title, Poster: poster } = movie;
 
   useKey("Escape", onCloseMovie);
 
-  useEffect(
-    function () {
-      async function getMovieDetails() {
-        setIsLoading(true);
-        const res = await fetch(
-          `http://www.omdbapi.com/?i=${selectedId}&apikey=${KEY}`
-        );
-        const data = await res.json();
-        setMovie(data);
-        setIsLoading(false);
-      }
-      getMovieDetails();
-    },
-    [selectedId]
-  );
+  useEffect(() => {
+    async function getMovieDetails() {
+      setIsLoading(true);
+      const res = await fetch(
+        `http://www.omdbapi.com/?i=${selectedId}&apikey=${KEY}`
+      );
+      const data = await res.json();
+      setMovie(data);
+      setIsLoading(false);
+    }
+    getMovieDetails();
+  }, [selectedId]);
 
-  useEffect(
-    function () {
-      if (!title) return;
-      document.title = `Movie | ${title}`;
+  useEffect(() => {
+    if (!title) return;
+    document.title = `Movie | ${title}`;
 
-      return function () {
-        document.title = "Reel Reviews";
-      };
-    },
-    [title]
-  );
+    return () => {
+      document.title = "Reel Reviews";
+    };
+  }, [title]);
 
   return (
-    <div className="flex items-center justify-center h-full">
+    <div className="flex items-center justify-center items-center w-screen">
       {isLoading ? (
         <Loader />
       ) : (
-        <div className="relative flex flex-col items-center p-4 bg-white rounded-lg shadow-lg">
-          <h1 className="text-2xl mb-4">{title}</h1>
+        <div className="relative flex flex-col p-4">
+          <h1 className="text-2xl mb-4 text-center">{title}</h1>
           <img
             src={poster}
             alt={`Poster of ${title} movie`}
             className="rounded-lg w-full max-w-md h-auto mb-4 shadow-xl"
           />
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col items-center text-center">
             {!isRated ? (
               <>
                 <StarRating
@@ -354,13 +314,13 @@ function MovieDetails({
                   onAddRated={onAddRated}
                   movie={movie}
                 />
-                <div className="mt-4 flex space-x-2">
+                <div className="flex space-x-2">
                   <button
                     onClick={() => onAddRated(movie, userRating)}
                     type="button"
-                    className="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5"
+                    className="focus:outline-none text-black bg-yellow-300 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-500 font-medium rounded-lg text-sm px-5 py-2.5"
                   >
-                    Rate
+                    Submit Rating
                   </button>
                   <Heart
                     movie={movie}
