@@ -333,49 +333,47 @@ function MovieDetails({
   );
 
   return (
-    <div className="detail">
+    <div className="flex items-center justify-center h-full">
       {isLoading ? (
         <Loader />
       ) : (
-        <>
-      <div className="relative flex flex-col justify-center">
-      <h1 className="flex justify-center text-2xl">{title}</h1>
-        <img
-          src={poster}
-          alt={`Poster of ${movie} movie`}
-          className="movie-img-top rounded-lg w-full h-auto shadow-xl"
-        />
-        <div>
-                  {!isRated ? (
-                    <>
-                      <StarRating
-                        maxRating={5}
-                        size={48}
-                        onSetRating={setUserRating}
-                        onAddRated={onAddRated}
-                        movie={movie}
-                      />
-                      <div className="mt-1 mb-1 flex space-x-2 justify-center">
-                      <button onClick={() => onAddRated(movie, userRating)} type="button"
-                  className="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
-                        Rate
-                      </button>
-                      
-                      <Heart
-                        movie={movie}
-                        userData={userData}
-                        userRating={userRating}
-                      />
-
-                    </>
-                  ) : (
-                    <p>You rated this movie {ratedUserRating}/5⭐</p>
-                  )}
-        </div>
+        <div className="relative flex flex-col items-center p-4 bg-white rounded-lg shadow-lg">
+          <h1 className="text-2xl mb-4">{title}</h1>
+          <img
+            src={poster}
+            alt={`Poster of ${title} movie`}
+            className="rounded-lg w-full max-w-md h-auto mb-4 shadow-xl"
+          />
+          <div className="flex flex-col items-center">
+            {!isRated ? (
+              <>
+                <StarRating
+                  maxRating={5}
+                  size={48}
+                  onSetRating={setUserRating}
+                  onAddRated={onAddRated}
+                  movie={movie}
+                />
+                <div className="mt-4 flex space-x-2">
+                  <button
+                    onClick={() => onAddRated(movie, userRating)}
+                    type="button"
+                    className="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5"
+                  >
+                    Rate
+                  </button>
+                  <Heart
+                    movie={movie}
+                    userData={userData}
+                    userRating={userRating}
+                  />
+                </div>
+              </>
+            ) : (
+              <p>You rated this movie {ratedUserRating}/5⭐</p>
+            )}
           </div>
-          {/* <p>{averageRating}</p> */}
-
-        </>
+        </div>
       )}
     </div>
   );
