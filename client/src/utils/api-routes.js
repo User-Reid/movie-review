@@ -21,6 +21,7 @@ export function useMovies(query) {
                         `https://www.omdbapi.com/?i=tt3896198&apikey=${KEY}&s=${query}`,
                         { signal: controller.signal }
                     );
+                    console.log("Success")
 
                     if (!res.ok)
                         throw new Error("Something went wrong with fetching movies");
