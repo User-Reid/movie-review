@@ -6,7 +6,7 @@ import {
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 // import { Outlet } from 'react-router-dom';
-import Header from "../components/Header";
+// import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { Outlet } from "react-router-dom";
 import Navigation from "../components/Navigation";
@@ -32,7 +32,6 @@ function AppLayout() {
     <ApolloProvider client={client}>
       <div className="flex flex-col justify-between h-screen">
         {auth.loggedIn() ? <Navigation /> : ""}
-        <Header />
         {/* <Navbar /> */}
         <Outlet />
         <Footer />
