@@ -8,6 +8,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import { RATE_MOVIE } from "../utils/mutations";
 import Heart from "../components/Heart";
 import { QUERY_ME } from "../utils/queries";
+import Carousel from "../components/Carousel";
 
 import Auth from "../utils/auth";
 
@@ -22,6 +23,12 @@ export default function App() {
   const me = useQuery(QUERY_ME);
   const userData = me.data?.me || {};
   const [rated, setRated] = useLocalStorageState([], "rated");
+
+  const favoriteMovies =
+    userData.favoriteMovies?.map((movie) => ({
+      image: movie.image,
+      title: movie.title,
+    })) || [];
 
   // useEffect(() => {
   //   if (!Auth.loggedIn()) {
@@ -87,13 +94,17 @@ export default function App() {
       </NavBar>
       <Main selected={selected}>
         {!selected ? (
-          <Box className="flex">
-            {isLoading && <Loader />}
-            {!isLoading && !error && (
-              <MovieList movies={movies} onSelectMovie={handleSelectMovie} />
-            )}
-            {error && <ErrorMessage message={error} />}
-          </Box>
+          !query ? (
+            <Carousel items={favoriteMovies} />
+          ) : (
+            <Box className="flex">
+              {isLoading && <Loader />}
+              {!isLoading && !error && (
+                <MovieList movies={movies} onSelectMovie={handleSelectMovie} />
+              )}
+              {error && <ErrorMessage message={error} />}
+            </Box>
+          )
         ) : (
           <Box>
             {selectedId ? (
