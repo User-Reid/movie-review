@@ -323,12 +323,12 @@ function MovieDetails({
                   >
                     Submit Rating
                   </button>
+                  <Heart
+                    movie={movie}
+                    userData={userData}
+                    userRating={userRating}
+                  />
                 </div>
-                <Heart
-                  movie={movie}
-                  userData={userData}
-                  userRating={userRating}
-                />
               </>
             ) : (
               <p>You rated this movie {ratedUserRating}/5⭐</p>
