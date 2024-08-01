@@ -17,10 +17,12 @@ export function useMovies(query) {
                 try {
                     setIsLoading(true);
                     setError("");
+                    const url = `https://www.omdbapi.com/?i=tt3896198&apikey=${KEY}&s=${query}`
                     const res = await fetch(
-                        `https://www.omdbapi.com/?i=tt3896198&apikey=${KEY}&s=${query}`,
+                        url,
                         { signal: controller.signal }
                     );
+                    console.log(url)
 
                     if (!res.ok)
                         throw new Error("Something went wrong with fetching movies");
