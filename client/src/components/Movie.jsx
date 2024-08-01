@@ -1,4 +1,4 @@
-import { star } from "../assets/star.png"
+import star from "../assets/star.png"
 
 const Movie = ({ src, alt, rating }) => {
   const renderRatingContent = () => {
